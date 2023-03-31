@@ -1,0 +1,224 @@
+﻿@using System.Security.Claims
+@using RaceCorp.Common
+@model RaceProfileViewModel
+@{
+    this.ViewData["Title"] = "Race Profile";
+}
+
+@if (this.TempData.ContainsKey("Message"))
+{
+    <div class="alert alert-success">@this.TempData["Message"]</div>
+}
+
+@if (this.TempData.ContainsKey("MessageDeleted"))
+{
+    <div class="alert alert-success">@this.TempData["MessageDeleted"]</div>
+}
+@if (this.TempData.ContainsKey("Unregistered"))
+{
+    <div class="alert alert-success">@this.TempData["Unregistered"]</div>
+}
+
+@if (this.TempData.ContainsKey("Registered"))
+{
+    <div class="alert alert-success">@this.TempData["Registered"]</div>
+}
+
+@if (this.TempData.ContainsKey("CannotParticipate"))
+{
+    <div class="alert alert-success">@this.TempData["CannotParticipate"]</div>
+}
+
+<style>
+    .resize {
+        width: 100px;
+        height: auto;
+    }
+
+    .img-img {
+        border-radius: 40%;
+    }
+</style>
+@if (this.User.IsInRole(GlobalConstants.AdministratorRoleName) ||
+this.User.IsInRole(GlobalConstants.UserRoleName))
+{
+    @if (Model.IsOwner || this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+    {
+        <div class="row">
+            <div class="col-md-4  mt-1 mb-3">
+                <a class="form-control btn btn-outline-success mb-1 " asp-controller="Trace" asp-action="CreateRaceTrace" asp-route-raceId="@Model.Id">Create trace</a>
+
+            </div>
+            <div class="col-md-4  mt-1 mb-3">
+                <a class="form-control btn btn-outline-secondary mb-1 " asp-route-id="@Model.Id" asp-action="Edit">Edit</a>
+
+            </div>
+
+            <div class="col-md-4 mt-1 mb-3">
+                <form method="post" asp-controller="Race" asp-action="Delete" asp-route-id="@Model.Id">
+                    <button class="form-control btn btn-outline-danger mb-1 btn-block" type="submit">Delete</button>
+                </form>
+            </div>
+        </div>
+    }
+}
+
+<div class="text-center">
+    <h5>@this.ViewData["Title"]</h5>
+
+</div>
+<div class="row">
+
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            <h1>@Model.Name</h1>
+        </div>
+    </div>
+    <div class="row">
+
+
+        <div class="col-md-3 mb-3">
+            <img src=@Model.LogoPath class="card-img-top">
+        </div>
+        <div class="col-md-3 mb-3">
+
+            <article>Description: @Model.Description</article>
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <article>Where: The race takes place in mount <b>@Model.Mountain</b>, <b>@Model.Town</b></article>
+        </div>
+        <div class="col-md-3 mb-3">
+            <article>When: <b>@Model.Date</b></article>
+        </div>
+    </div>
+
+
+    <hr />
+    @if (Model.ApplicationUserId != null)
+    {
+        <div>
+            Race Owner : @Model.ApplicationUserFirstName @Model.ApplicationUserLastName
+            <a asp-action="Profile" asp-controller="User" asp-area="" asp-route-id="@Model.ApplicationUserId">
+                <img class="resize img-img" src="@Model.ApplicationUserProfilePicturePath" />
+            </a>
+        </div>
+    }
+    <hr />
+
+
+
+    @if (Model.Traces.Count != 0)
+    {
+        <h4>Traces</h4>
+        @for (int i = 0; i < Model.Traces.Count; i++)
+        {
+            var trace = Model.Traces[i];
+            var idCollapse = "olemale" + i;
+            <div class="accordion mb-3" id="traces@i">
+                <div class="accordion-item">
+                    <h2 class=" accordion-header" id="heading-@i">
+                        <button class="accordion-button text-center" type="button" data-bs-toggle="collapse" data-bs-target="#@idCollapse" aria-expanded="false">
+                            <b class="text-center">@trace.Name</b>
+                        </button>
+                    </h2>
+                    <div id="@idCollapse" class="accordion-collapse collapse" aria-labelledby="heading-@i" data-bs-parent="#departments">
+                        <div class="accordion-body text-center">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <div class="row form-group">
+                                        <a class="btn btn-outline-secondary" asp-area="" asp-controller="Trace" asp-action="RaceTraceProfile" asp-route-traceId="@trace.Id" asp-route-raceId="@Model.Id"><b>@trace.Name</b></a>
+                                    </div>
+                                </li>
+
+                                <li class="list-group-item">
+                                    <b>
+                                        Difficulty:
+                                    </b>@trace.DifficultyName
+                                    <b>Length: </b>@trace.Length km
+                                    <b>
+                                        Control time:
+                                    </b>@trace.ControlTime h
+                                    <b>
+                                        Start time:
+                                    </b>
+                                    @trace.StartTime
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (Model.RegisteredUsers.Count() != 0)
+        {
+            <div class="scrollable-race">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td scope="col">#</td>
+                            <td scope="col">Racer</td>
+                            <td scope="col">Team</td>
+                            <td scope="col">Town</td>
+                            <td scope="col">Registered date</td>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @{
+                            var count = 0;
+                            @foreach (var user in Model.RegisteredUsers)
+                            {
+                                user.ApplicationUserMemberInTeamName = user.ApplicationUserMemberInTeamName == null ? "none" : user.ApplicationUserMemberInTeamName;
+
+                                <tr>
+                                    <td scope="row">@(count += 1)</td>
+                                    <td><a type="button" style="outline" class="btn btn-block" asp-area="" asp-action="Profile" asp-controller="User" asp-route-id="@user.ApplicationUserId">@user.ApplicationUserFirstName @user.ApplicationUserLastName</a></td>
+                                    <td class="text-center">@user.ApplicationUserMemberInTeamName</td>
+                                    <td class="text-center">@user.TownName</td>
+                                    <td scope="col">@user.CreatedOn</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    }
+    else
+    {
+        @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName) ||
+       this.User.IsInRole(GlobalConstants.UserRoleName))
+        {
+            @if (Model.IsOwner || this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+            {
+                <div class="card text-center">
+                    <div class="card-header">
+                        Opss..
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">There are no traces yet!</h5>
+                        <p class="card-text">Why don't you add one ?</p>
+                        <a class="btn btn-outline-secondary" asp-controller="Trace" asp-action="CreateRaceTrace" asp-route-raceId="@Model.Id">Create trace</a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        @DateTime.UtcNow
+                    </div>
+                </div>
+            }
+        }
+
+    }
+</div>
+
+<hr />
+
+
+
+
+

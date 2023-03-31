@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>..\..\Rules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Apis.Auth.AspNetCore3" Version="1.57.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435" PrivateAssets="all">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Google.Apis.Drive.v3" Version="1.57.0.2859" />
+		<PackageReference Include="Google.Apis.Oauth2.v2" Version="1.57.0.1869" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.10" />
+
+	</ItemGroup>
+
+
+	<ItemGroup>
+    <ProjectReference Include="..\..\Data\RaceCorp.Data.Common\RaceCorp.Data.Common.csproj" />
+    <ProjectReference Include="..\..\Data\RaceCorp.Data.Models\RaceCorp.Data.Models.csproj" />
+    <ProjectReference Include="..\..\RaceCorp.Common\RaceCorp.Common.csproj" />
+    <ProjectReference Include="..\..\Web\RaceCorp.Web.ViewModels\RaceCorp.Web.ViewModels.csproj" />
+    <ProjectReference Include="..\RaceCorp.Services.Mapping\RaceCorp.Services.Mapping.csproj" />
+    <ProjectReference Include="..\RaceCorp.Services.Messaging\RaceCorp.Services.Messaging.csproj" />
+  </ItemGroup>
+
+</Project>

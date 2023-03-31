@@ -1,0 +1,103 @@
+﻿@page
+@using RaceCorp.Common;
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<section class="text-center text-lg-start">
+  <style>
+    .cascading-right {
+      margin-right: -50px;
+      border-radius: 5%
+    }
+
+    img {
+  border-radius: 4%;
+}
+
+   /* media (max-width: 991.98px) {
+      .cascading-right {
+        margin-right: 0;
+      }
+    }*/
+  </style>
+
+  <!-- Jumbotron -->
+  <div class="container py-4">
+    <div class="row g-0 align-items-center">
+      <div class="col-lg-6 mb-5 mb-lg-0">
+        <div class="card cascading-right" style="
+            background: hsla(0, 0%, 100%, 0.55);
+            backdrop-filter: blur(30px);
+            ">
+          <div class="card-body p-5 shadow-5 text-center">
+            <h2 class="fw-bold mb-5">Login now</h2>
+            <form id="account" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+              <!-- 2 column grid layout with text inputs for the first and last names -->
+                          <!-- Email input -->
+              <div class="form-outline mb-4">
+                <input type="email" id="form3Example3" asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true"/>
+                <label class="form-label" for="form3Example3">Email address</label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+              </div>
+
+              <!-- Password input -->
+              <div class="form-outline mb-4">
+                <input type="password" id="form3Example4" asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true"  />
+                <label class="form-label" for="form3Example4">Password</label>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+              </div>
+              <div class="checkbox">
+                <label asp-for="Input.RememberMe" class="form-label">
+                    <input class="form-check-input" asp-for="Input.RememberMe" />
+                    @Html.DisplayNameFor(m => m.Input.RememberMe)
+                </label>
+            </div>
+              <!-- Checkbox -->
+        
+
+              <!-- Submit button -->
+              <button type="submit" id="login-submit" class="btn btn-primary btn-block mb-4">
+               Login
+              </button>
+
+              <div class="text-center mb-1">
+                                <a href="/Identity/Account/ForgotPassword/">Forgot password ?</a>
+              </div>
+
+              <!-- Register buttons -->
+              <div class="text-center">
+                <p>or sign up with:</p>
+                                             
+                             </div>
+            </form>
+
+             <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                                    <div>
+                                        <p>
+                                            @foreach (var provider in Model.ExternalLogins)
+                                            {
+                                                <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"> <i class="fab fa-google"></i></button>
+                                            }
+                                        </p>
+                                    </div>
+                                </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 mb-5 mb-lg-0">
+        <img src="@GlobalConstants.LoginDefaultImage" class="w-100 rounded-4 shadow-4"
+          alt="" />
+      </div>
+    </div>
+  </div>
+  <!-- Jumbotron -->
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

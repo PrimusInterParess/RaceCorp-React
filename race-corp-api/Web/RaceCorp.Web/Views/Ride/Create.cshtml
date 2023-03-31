@@ -1,0 +1,34 @@
+﻿@model RaceCorp.Web.ViewModels.Ride.RideCreateViewModel
+
+@{
+    this.ViewData["Title"] = "Create Ride";
+    this.ViewData["ButtonName"] = "Create";
+    var formats = Model.Formats.Select(t => new SelectListItem(t.Value, t.Key));
+    var difficulties = Model.Trace.DifficultiesKVP.Select(t => new SelectListItem(t.Value, t.Key));
+}
+
+@if(this.TempData.ContainsKey("roothPath"))
+{
+    <div class="alert alert-success">@this.TempData["roothPath"]</div>
+}
+
+<style>
+    .myform .required:after {
+        content: " *";
+        color: red;
+        font-weight: 100;
+    }
+</style>
+
+<div id="formInput" class="text-center" onload="getElements()">
+    <h1>@ViewData["Title"]</h1>
+    <div class="col-md-4 offset-md-4">
+        <form method="post" class="form-group myform" enctype="multipart/form-data">
+            <partial name="_RideInputFormPartial" model="@Model" />
+            <button class="btn btn-outline-secondary" type="submit">@ViewData["ButtonName"]</button>
+
+        </form>
+        <div>
+        </div>
+    </div>
+</div>

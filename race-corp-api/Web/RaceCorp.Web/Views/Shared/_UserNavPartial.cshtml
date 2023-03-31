@@ -1,0 +1,76 @@
+﻿@using RaceCorp.Common
+@{
+    var currentUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+    var isOwner = false;
+    if (currentUserId != null)
+    {
+        isOwner = currentUserId == Model.Id;
+    }
+}
+
+<ul class="nav-buttons-user">
+
+    @if (isOwner)
+    {
+        <li>
+            <form method="get">
+                <button asp-action="Requests" asp-controller="User" asp-area="" asp-route-id="@Model.Id" class="mailbox form-control">
+                    📨 Requests
+                    <div class="notification" role="status">@Model.RequestsCount</div>
+                </button>
+            </form>
+        </li>
+    }
+    @if (isOwner)
+    {
+        <li>
+            <form method="get">
+                <button asp-action="Inbox" asp-controller="Message" asp-area="" asp-route-id="@Model.Id" class="mailbox form-control">
+                    📨 Messages
+                    <div class="notification" role="status">@Model.UnreadMessages</div>
+                </button>
+            </form>
+        </li>
+    }
+    else if (Model.CanMessageMe)
+    {
+        <li>
+            <a asp-action="SendMessage" asp-controller="Message" asp-area="" asp-route-receiverId="@Model.Id" asp-route-senderId="@currentUserId" class="btn mailbox form-control">
+                📨 Send Message
+            </a>
+
+        </li>
+
+        <li>
+            <form method="post">
+                <button class="btn btn-outline-danger" asp-action="Diconnect" asp-controller="Connection" asp-area="" asp-route-type="@GlobalConstants.RequestTypeDisconnectUser" asp-route-requesterId="@currentUserId" asp-route-targetId="@Model.Id" class="mailbox form-control">
+                    Disconnect
+                </button>
+            </form>
+        </li>
+
+    }
+
+    @if (Model.IsConnected == false && isOwner == false)
+    {
+        if (Model.RequestedConnection == false)
+        {
+            <li>
+                <form method="post">
+                    <button asp-action="Connect" asp-controller="Connection" asp-area="" asp-route-type="@GlobalConstants.RequestTypeConnectUser" asp-route-requesterId="@currentUserId" asp-route-targetId="@Model.Id" class="mailbox form-control">
+                        Connect
+                    </button>
+                </form>
+            </li>
+        }
+        else
+        {
+            <li>
+                <button type="button" class="mailbox form-control">
+                    Requested Connection
+                </button>
+            </li>
+        }
+    }
+</ul>

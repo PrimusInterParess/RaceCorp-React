@@ -1,0 +1,38 @@
+﻿@model RaceAllViewModel
+
+@if (Model.RacesCount == 0)
+{
+    <div class="card text-center">
+        <div class="card-header">
+            Opss..
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">There are no races yet!</h5>
+            <p class="card-text">Why don't you add one ?</p>
+            <a asp-action="Create" asp-controller="Race" class="btn btn-secondary">Create race</a>
+        </div>
+        <div class="card-footer text-muted">
+            @DateTime.UtcNow
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var race in this.Model.Races)
+        {
+          
+            <div class="column">
+                <div class="card" style="height:33rem;">
+                    <img src="@race.LogoPath" alt="@race.Name" class="my-image mt-4" style="width:100%">
+                    <div class="container">
+                        <h2>@race.Name</h2>
+                        <a class="btn btn-outline-secondary" asp-controller="Race" asp-action="Profile" asp-route-id="@race.Id"><h5>@race.Name</h5></a>
+                        <p>@race.Date</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <hr />
+}

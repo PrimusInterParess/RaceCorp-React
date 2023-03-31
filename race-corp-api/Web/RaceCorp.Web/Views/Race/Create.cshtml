@@ -1,0 +1,25 @@
+﻿@model RaceCreateModel
+
+@{
+    this.ViewData["Title"] = "Create Race";
+    this.ViewData["ButtonName"] = "Create";
+
+}
+<div onload="getElements()">
+    <partial name="_RaceInputFormPartial" model="@Model" />
+</div>
+
+
+<script src="~/js/traceAdd.js"></script>
+
+@section Scripts{
+    <script>
+
+        var formEl = document.getElementById("formInput");
+
+        formEl.addEventListener('onload', getElements());
+    </script>
+}
+
+
+
